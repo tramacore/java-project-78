@@ -1,14 +1,19 @@
 package hexlet.code;
 
+import hexlet.code.schemas.BaseSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.assertEquals;
+
 import hexlet.code.schemas.MapSchema;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class Tests {
     static Validator v = new Validator();
@@ -17,7 +22,7 @@ public class Tests {
     MapSchema mapSchema = new MapSchema();
 
     @BeforeAll
-    static void BeforeAll() {
+    static void beforeAll() {
         StringSchema stringSchema = v.string();
         NumberSchema numberSchema = v.number();
         MapSchema mapSchema = v.map();
@@ -54,9 +59,10 @@ public class Tests {
 
     @Test
     void numberTest() throws Exception {
-        boolean actual = numberSchema.required().positive().range(10,20).isValid(15);
+        boolean actual = numberSchema.required().positive().range(10, 20).isValid(15);
         assertEquals(true, actual);
     }
+
     @Test
     void numberRequiredTest() throws Exception {
         boolean actual = numberSchema.required().isValid(null);
@@ -68,7 +74,7 @@ public class Tests {
 
     @Test
     void numberPositiveTest() throws Exception {
-        boolean actual =  numberSchema.positive().isValid(-4);
+        boolean actual = numberSchema.positive().isValid(-4);
         assertEquals(false, actual);
 
         boolean actual2 = numberSchema.positive().isValid(0);
@@ -89,7 +95,7 @@ public class Tests {
         Map<String, String> map = new HashMap<>();
         boolean actual2 = mapSchema.isValid(null);
         assertEquals(true, actual2);
-        
+
         boolean actual = mapSchema.required().isValid(null);
         assertEquals(false, actual);
 
@@ -107,6 +113,59 @@ public class Tests {
 
         Map<String, String> falseMap = new HashMap<>(Map.of("sample", "text"));
         boolean actual1 = mapSchema.sizeof(2).isValid(falseMap);
-        assertEquals(false,actual1);
+        assertEquals(false, actual1);
+    }
+
+    @Test
+    void testShapeValidData() {
+        Map<String, BaseSchema<?>> schemas = new HashMap<>();
+        schemas.put("firstName", stringSchema.required());
+        schemas.put("lastName", stringSchema.required().minLength(2));
+        mapSchema.shape(schemas);
+
+        Map<String, Object> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+
+        boolean actual = mapSchema.isValid(human1);
+        assertTrue(actual);
+    }
+
+    @Test
+    void testShapeInvalidData() {
+        Map<String, BaseSchema<?>> schemas = new HashMap<>();
+        schemas.put("firstName", stringSchema.required());
+        schemas.put("lastName", stringSchema.required().minLength(2));
+        mapSchema.shape(schemas);
+
+        Map<String, Object> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", null);
+
+        boolean actual = mapSchema.isValid(human1);
+        assertFalse(actual);
+
+        human1.put("lastname", "B");
+        boolean actual1 = mapSchema.isValid(human1);
+        assertFalse(actual1);
+    }
+
+    @Test
+    void testShapeInvalidNumberData() {
+        Map<String, BaseSchema<?>> schemas = new HashMap<>();
+        schemas.put("firstName", stringSchema.required());
+        schemas.put("age", numberSchema.required().range(18, 99));
+        mapSchema.shape(schemas);
+
+        Map<String, Object> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("age", null);
+
+        boolean actual = mapSchema.isValid(human1);
+        assertFalse(actual);
+
+        human1.put("age", 21);
+        boolean actual1 = mapSchema.isValid(human1);
+        assertTrue(actual1);
     }
 }

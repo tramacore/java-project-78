@@ -6,8 +6,11 @@ import java.util.function.Predicate;
 
 public class StringSchema extends BaseSchema<String> {
     private boolean required = false;
-    private int minLength = 0;
-    private final List<Predicate<String>> checks = new ArrayList<>();
+    private int minLength = -1;
+
+    public StringSchema() {
+        checks = new ArrayList<>();
+    }
 
     public StringSchema required() {
         this.required = true;
@@ -27,7 +30,12 @@ public class StringSchema extends BaseSchema<String> {
     }
 
     @Override
-    public List<Predicate<String>> getChecks() {
+    protected List<Predicate<String>> getChecks() {
         return checks;
+    }
+
+    @Override
+    protected Class<String> getType() {
+        return String.class;
     }
 }

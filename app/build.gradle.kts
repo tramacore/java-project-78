@@ -1,5 +1,7 @@
 plugins {
     id("java")
+    checkstyle
+    id("jacoco")
 }
 
 group = "hexlet.code"
@@ -17,4 +19,17 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+    reportsDirectory = layout.buildDirectory.dir("reports/jacoco/")
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }

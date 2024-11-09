@@ -6,8 +6,10 @@ import java.util.function.Predicate;
 
 public class NumberSchema extends BaseSchema<Integer> {
     private boolean required = false;
-    private int minLength = 0;
-    private final List<Predicate<Integer>> checks = new ArrayList<>();
+
+    public NumberSchema() {
+        checks = new ArrayList<>();
+    }
 
     public NumberSchema required() {
         this.required = true;
@@ -26,7 +28,12 @@ public class NumberSchema extends BaseSchema<Integer> {
     }
 
     @Override
-    public List<Predicate<Integer>> getChecks() {
+    protected List<Predicate<Integer>> getChecks() {
         return checks;
+    }
+
+    @Override
+    protected Class<Integer> getType() {
+        return Integer.class;
     }
 }
