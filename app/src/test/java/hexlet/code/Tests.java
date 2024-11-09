@@ -5,16 +5,22 @@ import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
+import hexlet.code.schemas.MapSchema;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Tests {
     static Validator v = new Validator();
     StringSchema stringSchema = new StringSchema();
     NumberSchema numberSchema = new NumberSchema();
+    MapSchema mapSchema = new MapSchema();
 
     @BeforeAll
     static void BeforeAll() {
         StringSchema stringSchema = v.string();
         NumberSchema numberSchema = v.number();
+        MapSchema mapSchema = v.map();
     }
 
     @Test
@@ -76,5 +82,31 @@ public class Tests {
 
         boolean actual2 = numberSchema.range(3, 6).isValid(6);
         assertEquals(true, actual2);
+    }
+
+    @Test
+    void mapRequiredTest() {
+        Map<String, String> map = new HashMap<>();
+        boolean actual2 = mapSchema.isValid(null);
+        assertEquals(true, actual2);
+        
+        boolean actual = mapSchema.required().isValid(null);
+        assertEquals(false, actual);
+
+        boolean actual1 = mapSchema.required().isValid(map);
+        assertEquals(true, actual1);
+
+
+    }
+
+    @Test
+    void mapSizeOfTest() {
+        Map<String, String> trueMap = new HashMap<>(Map.of("sample", "text", "key", "value"));
+        boolean actual = mapSchema.sizeof(2).isValid(trueMap);
+        assertEquals(true, actual);
+
+        Map<String, String> falseMap = new HashMap<>(Map.of("sample", "text"));
+        boolean actual1 = mapSchema.sizeof(2).isValid(falseMap);
+        assertEquals(false,actual1);
     }
 }
