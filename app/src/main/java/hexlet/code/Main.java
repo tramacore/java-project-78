@@ -1,17 +1,33 @@
 package hexlet.code;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import hexlet.code.schemas.StringSchema;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Validator v = new Validator();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        // Создаем схему валидации и накапливаем правила
+        StringSchema schema = v.string();
+
+        // Проверяем значения
+        System.out.println(schema.isValid("")); // true
+        System.out.println(schema.isValid(null)); // true
+
+        schema.required();
+
+        System.out.println(schema.isValid(null)); // false
+        System.out.println(schema.isValid("")); // false
+        System.out.println(schema.isValid("what does the fox say")); // true
+        System.out.println(schema.isValid("hexlet")); // true
+
+        schema.contains("wh").isValid("what does the fox say"); // true
+        schema.contains("what").isValid("what does the fox say"); // true
+        schema.contains("whatthe").isValid("what does the fox say"); // false
+
+        // Здесь уже false, так как добавлена еще одна проверка contains("whatthe")
+        System.out.println(schema.isValid("what does the fox say")); // false
+
+        var schema1 = v.string();
+        schema1.minLength(10).minLength(4).isValid("Hexlet"); // true
     }
 }
