@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class StringSchema {
+public class StringSchema extends BaseSchema<String> {
     private boolean required = false;
     private int minLength = 0;
     private final List<Predicate<String>> checks = new ArrayList<>();
@@ -26,12 +26,8 @@ public class StringSchema {
         return this;
     }
 
-    public boolean isValid(String text) {
-        for (Predicate<String> check : checks) {
-            if (!check.test(text)) {
-                return false;
-            }
-        }
-        return true;
+    @Override
+    public List<Predicate<String>> getChecks() {
+        return checks;
     }
 }

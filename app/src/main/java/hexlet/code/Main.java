@@ -1,33 +1,36 @@
 package hexlet.code;
 
-import hexlet.code.schemas.StringSchema;
+import hexlet.code.schemas.NumberSchema;
+
 
 public class Main {
-    public static void main(String[] args) {
-        Validator v = new Validator();
+    public static void main(String[] args) throws Exception {
+        var v = new Validator();
 
-        // Создаем схему валидации и накапливаем правила
-        StringSchema schema = v.string();
+        NumberSchema schema = v.number();
 
-        // Проверяем значения
-        System.out.println(schema.isValid("")); // true
-        System.out.println(schema.isValid(null)); // true
+        schema.isValid(5); // true
+
+        schema.isValid(null); // true
+        schema.positive().isValid(null); // true
 
         schema.required();
 
-        System.out.println(schema.isValid(null)); // false
-        System.out.println(schema.isValid("")); // false
-        System.out.println(schema.isValid("what does the fox say")); // true
-        System.out.println(schema.isValid("hexlet")); // true
+        schema.isValid(null); // false
+        schema.isValid(10); // true
 
-        schema.contains("wh").isValid("what does the fox say"); // true
-        schema.contains("what").isValid("what does the fox say"); // true
-        schema.contains("whatthe").isValid("what does the fox say"); // false
+        schema.isValid(-10); // false
 
-        // Здесь уже false, так как добавлена еще одна проверка contains("whatthe")
-        System.out.println(schema.isValid("what does the fox say")); // false
+        schema.isValid(0); // false
 
-        var schema1 = v.string();
-        schema1.minLength(10).minLength(4).isValid("Hexlet"); // true
+        schema.range(5, 10);
+
+        System.out.println(schema.isValid(5)); // true
+        System.out.println(schema.isValid(10));
+        System.out.println(schema.isValid(4));
+        System.out.println(schema.isValid(11));
+        schema.isValid(10); // true
+        schema.isValid(4); // false
+        schema.isValid(11); // false
     }
 }
