@@ -15,6 +15,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+//Не понимаю почему hexlet-check крашится на тестах
+
 public class Tests {
     static Validator v = new Validator();
     StringSchema stringSchema = new StringSchema();
