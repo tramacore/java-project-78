@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 //Не понимаю почему hexlet-check крашится на тестах
@@ -33,76 +32,76 @@ public class Tests {
     @Test
     void stringTest() throws Exception {
         boolean actual = stringSchema.required().minLength(5).contains("let").isValid("Hexlet");
-        assertEquals(true, actual);
+        assertTrue(actual);
     }
 
     @Test
     void stringRequiredTest() throws Exception {
         boolean actual = stringSchema.required().isValid(" ");
-        assertEquals(false, actual);
+        assertFalse(actual);
 
         boolean actual2 = stringSchema.required().isValid(null);
-        assertEquals(false, actual2);
+        assertFalse(actual2);
     }
 
     @Test
     void stringMinLengthTest() throws Exception {
         boolean actual = stringSchema.minLength(5).isValid("Hexlet");
-        assertEquals(true, actual);
+        assertTrue(actual);
         boolean actual2 = stringSchema.minLength(7).isValid("Hexlet");
-        assertEquals(false, actual2);
+        assertFalse(actual2);
     }
 
     @Test
     void stringContainsTest() throws Exception {
         boolean actual = stringSchema.contains("let").isValid("Hexlet");
-        assertEquals(true, actual);
+        assertTrue(actual);
     }
 
     @Test
     void numberTest() throws Exception {
         boolean actual = numberSchema.required().positive().range(10, 20).isValid(15);
-        assertEquals(true, actual);
+        assertTrue(actual);
     }
 
     @Test
     void numberRequiredTest() throws Exception {
         boolean actual = numberSchema.required().isValid(null);
-        assertEquals(false, actual);
+        assertFalse(actual);
 
         boolean actual2 = numberSchema.required().isValid(1);
-        assertEquals(true, actual2);
+        assertTrue(actual2);
     }
 
     @Test
     void numberPositiveTest() throws Exception {
         boolean actual = numberSchema.positive().isValid(-4);
-        assertEquals(false, actual);
+        assertFalse(actual);
 
         boolean actual2 = numberSchema.positive().isValid(0);
-        assertEquals(true, actual2);
+        assertTrue(actual2);
     }
 
     @Test
     void numberRangeTest() throws Exception {
         boolean actual = numberSchema.range(3, 6).isValid(2);
-        assertEquals(false, actual);
+        assertFalse(actual);
 
         boolean actual2 = numberSchema.range(3, 6).isValid(6);
-        assertEquals(true, actual2);
+        assertTrue(actual2);
     }
 
     @Test
     void mapRequiredTest() {
         Map<String, String> map = new HashMap<>();
         boolean actual2 = mapSchema.isValid(null);
-        assertEquals(true, actual2);
+        assertTrue(actual2);
 
         boolean actual = mapSchema.required().isValid(null);
-        assertEquals(false, actual);
+        assertFalse(actual);
 
         boolean actual1 = mapSchema.required().isValid(map);
-        assertEquals(true, actual1);
+        assertTrue(actual1);
 
 
     }
@@ -111,11 +110,11 @@ public class Tests {
     void mapSizeOfTest() {
         Map<String, String> trueMap = new HashMap<>(Map.of("sample", "text", "key", "value"));
         boolean actual = mapSchema.sizeof(2).isValid(trueMap);
-        assertEquals(true, actual);
+        assertTrue(actual);
 
         Map<String, String> falseMap = new HashMap<>(Map.of("sample", "text"));
         boolean actual1 = mapSchema.sizeof(2).isValid(falseMap);
-        assertEquals(false, actual1);
+        assertFalse(actual1);
     }
 
     @Test
